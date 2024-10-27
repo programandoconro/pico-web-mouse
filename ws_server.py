@@ -15,7 +15,7 @@ class WebSocketClient:
 
 
 class WebSocketServer:
-    def __init__(self, page, max_connections=1):
+    def __init__(self, page, max_connections=100):
         self._listen_s = None
         self._clients = []
         self._max_connections = max_connections

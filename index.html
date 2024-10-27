@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Pico Web Mouse</title>
+  </head>
+  <body></body>
+</html>
+
+<style>
+  body {
+    background-color: black;
+    color: whitesmoke;
+  }
+</style>
+
+<script>
+  console.log("Attempting to connect to server");
+
+  const url = `ws://${window.location.host}`;
+  const webSocket = new WebSocket(url);
+
+  webSocket.addEventListener("open", () => {
+    console.log("Connected to server");
+    webSocket.send("Hello from client");
+  });
+
+  webSocket.addEventListener("close", () => {
+    console.log("Connection closed");
+  });
+
+  webSocket.addEventListener("error", (error) => {
+    console.log("WebSocket error:", error);
+  });
+
+  webSocket.addEventListener("message", (event) => {
+    console.log("Message from server:", event.data);
+  });
+</script>
