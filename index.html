@@ -6,13 +6,25 @@
     <link rel="stylesheet" href="style.css" />
     <title>Pico Web Mouse</title>
   </head>
-  <body></body>
+  <body>
+    <h1>Pico Web Mouse</h1>
+    <div class="frame" id="frame"></div>
+  </body>
 </html>
 
 <style>
   body {
     background-color: black;
     color: whitesmoke;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .frame {
+    border: solid 1px whitesmoke;
+    height: 70vh;
+    width: 90%;
   }
 </style>
 
@@ -37,5 +49,20 @@
 
   webSocket.addEventListener("message", (event) => {
     console.log("Message from server:", event.data);
+  });
+
+  const frame = document.getElementById("frame");
+
+  const prevPos = { prevX: undefined, prevY: undefined };
+  frame.addEventListener("touchmove", ({ touches }) => {
+    const { clientX, clientY } = touches[0];
+    const newX = Math.trunc(clientX);
+    const newY = Math.trunc(clientY);
+    const { prevX, prevY } = prevPos;
+    if (prevX !== newX && prevY !== newY) {
+      webSocket.send(`${newX} ${newY}`);
+      prevPos.prevX = newX;
+      prevPos.prevY = newY;
+    }
   });
 </script>
