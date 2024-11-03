@@ -1,7 +1,6 @@
 from ws_connection import ClientClosedError
 from ws_server import WebSocketServer, WebSocketClient
 
-
 class Client(WebSocketClient):
     def __init__(self, conn):
         super().__init__(conn)

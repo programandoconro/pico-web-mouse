@@ -36,6 +36,8 @@ class WebSocketServer:
             iface = network.WLAN(i)
             if iface.active():
                 print("WebSocket started on ws://%s:%d" % (iface.ifconfig()[0], port))
+            else:
+                print("There was an error in ws connection")
 
     def _accept_conn(self, listen_sock):
         cl, remote_addr = listen_sock.accept()
