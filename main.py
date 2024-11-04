@@ -3,7 +3,8 @@ import socketpool
 import wifi
 from adafruit_httpserver import Server, Request, Response, Websocket, GET
 from mouse import Mouse
-
+import digitalio
+import board
 
 pool = socketpool.SocketPool(wifi.radio)
 server = Server(pool, debug=True)
@@ -11,6 +12,9 @@ server = Server(pool, debug=True)
 websocket: Websocket = None
 
 m = Mouse()
+
+led = digitalio.DigitalInOut(board.LED)
+led.direction = digitalio.Direction.OUTPUT
 
 @server.route("/", GET)
 def client(request: Request):
@@ -27,6 +31,7 @@ def connect_client(request: Request):
 
     if websocket is not None:
         print("CLOSED")
+        led.value = False
         websocket.close()
 
     websocket = Websocket(request)
@@ -38,6 +43,7 @@ server.start(str(wifi.radio.ipv4_address))
 
 
 async def handle_http_requests():
+    led.value = True
     while True:
         server.poll()
 
