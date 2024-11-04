@@ -1,11 +1,14 @@
+# Creates a websocket server to virtually mouse control remotely
+# Websocket based on adafruit websocket example https://docs.circuitpython.org/projects/httpserver/en/latest/examples.html#websockets
+
+from adafruit_httpserver import Server, Request, Response, Websocket, GET
 from asyncio import create_task, gather, run, sleep as async_sleep
 import socketpool
-import wifi
-from adafruit_httpserver import Server, Request, Response, Websocket, GET
-from mouse import Mouse
 import digitalio
 import board
-import json
+import wifi
+
+from mouse import Mouse
 
 pool = socketpool.SocketPool(wifi.radio)
 server = Server(pool, debug=True)
@@ -22,8 +25,10 @@ def client(request: Request):
     try:
         with open("/index.html", "r") as file:
             html_content = file.read()
+        led.value = True
         return Response(request, html_content, content_type="text/html")
     except OSError:
+        led.value = False
         return Response(request, "File not found", status=404)
 
 @server.route("/connect-websocket", GET)
@@ -31,8 +36,6 @@ def connect_client(request: Request):
     global websocket
 
     if websocket is not None:
-        print("CLOSED")
-        led.value = False
         websocket.close()
 
     websocket = Websocket(request)
@@ -44,7 +47,6 @@ server.start(str(wifi.radio.ipv4_address))
 
 
 async def handle_http_requests():
-    led.value = True
     while True:
         server.poll()
 
@@ -55,39 +57,15 @@ async def handle_websocket_requests():
     while True:
         if websocket is not None:
             if (data := websocket.receive(fail_silently=True)) is not None:
-                print(handle_messages(msg=data))
+                print(m.handle_mouse_events(msg=data))
 
         await async_sleep(0)
-
-
-async def send_websocket_messages():
-  pass
-
-def handle_messages(msg: str)-> str:
-    try:
-        parsed = json.loads(msg)
-        message_type = parsed.get("type")
-        message_value = parsed.get("value")
-
-        if message_type == "move":
-            m.move(coors=message_value)
-        elif message_type == "click":
-            m.click(button=message_value)
-        else:
-            print("Unknown message type:", message_type)
-        
-        return message_value
-
-    except json.JSONDecodeError:
-        return "Failed to decode JSON"
-
 
 
 async def main():
     await gather(
         create_task(handle_http_requests()),
         create_task(handle_websocket_requests()),
-        create_task(send_websocket_messages()),
     )
 
 
