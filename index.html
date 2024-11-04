@@ -8,6 +8,7 @@
   <body>
     <h1>Pico Web Mouse</h1>
     <div class="frame" id="frame"></div>
+    <h3>*Touch and move inside the above frame to make your mouse move</h3>
   </body>
 </html>
 
@@ -59,11 +60,11 @@
     const newY = Math.trunc(clientY);
     const { prevX, prevY } = prevPos;
     if (prevX !== newX && prevY !== newY) {
-      webSocket.send(`${newX} ${newY}`);
+      const diffX = newX - prevX;
+      const diffY = newY - prevY;
+      webSocket.send(`${diffX} ${diffY}`);
       prevPos.prevX = newX;
       prevPos.prevY = newY;
     }
   });
 </script>
-
-"""
