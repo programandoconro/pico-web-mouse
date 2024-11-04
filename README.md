@@ -16,7 +16,6 @@ Built using Adafruit Circuitpython for the Websocket server and the HID function
 ```
 CIRCUITPY_WIFI_SSID = "ssid"
 CIRCUITPY_WIFI_PASSWORD = "password"
-
 ```
 
 3. Upload the files in this repo to you Pico.
