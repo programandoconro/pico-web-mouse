@@ -36,7 +36,6 @@
 
   webSocket.addEventListener("open", () => {
     console.log("Connected to server");
-    webSocket.send("Hello from client");
   });
 
   webSocket.addEventListener("close", () => {
@@ -62,14 +61,21 @@
     if (prevX !== newX && prevY !== newY) {
       const diffX = newX - prevX;
       const diffY = newY - prevY;
-      webSocket.send(`${diffX} ${diffY}`);
+      webSocket.send(
+        JSON.stringify({ type: "move", value: `${diffX} ${diffY}` })
+      );
       prevPos.prevX = newX;
       prevPos.prevY = newY;
     }
   });
+
   frame.addEventListener("touchend", ({ touches }) => {
     // reset movement when touch ended
     prevPos.prevX = undefined;
     prevPos.prevY = undefined;
+  });
+
+  frame.addEventListener("click", () => {
+    webSocket.send(JSON.stringify({ type: "click", value: "left" }));
   });
 </script>
