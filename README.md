@@ -4,7 +4,7 @@
 
 A web app the allows you to remotely control your computer's mouse from you phone as a virtual mouse. You connect a Raspberry Pico W to your computer, it will serve a websocket server for real time interaction. Go to the server's ip in your phon and move with touch events. Your computer will move the cursor from your phone.
 
-It is a websocket server with the Raspberry Pico W that allows you to control your mouse from a web app. You can connect the Raspberry to your target device, then connect to the server using your phone, and move in the web site as a virtual mouse connected to your real device.
+It is a websocket server with the Raspberry Pico W that allows you to control your mouse from a web app. You can connect the Raspberry to your target device, then connect to the server using your phone, and move in the web site as a virtual mouse connected to your real device. You can tap screen to click.
 
 Built using Adafruit Circuitpython for the Websocket server and the HID functionality.
 

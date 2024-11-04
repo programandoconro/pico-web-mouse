@@ -17,8 +17,13 @@ class Mouse:
 
         return(x, y)
 
-    def move(self, data) -> None:
-        (x, y) = self.parse_data(data)
+    def move(self, coors) -> None:
+        (x, y) = self.parse_data(coors)
         m.move(x, y)
 
+    def click(self, button) -> None:
+        if button == "left":
+            m.click(AdafruitMouse.LEFT_BUTTON)
+        elif button == "right":
+            m.click(AdafruitMouse.RIGHT_BUTTON)
     

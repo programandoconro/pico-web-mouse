@@ -5,6 +5,7 @@ from adafruit_httpserver import Server, Request, Response, Websocket, GET
 from mouse import Mouse
 import digitalio
 import board
+import json
 
 pool = socketpool.SocketPool(wifi.radio)
 server = Server(pool, debug=True)
@@ -54,15 +55,32 @@ async def handle_websocket_requests():
     while True:
         if websocket is not None:
             if (data := websocket.receive(fail_silently=True)) is not None:
-                (x, y) = m.parse_data(data)
-                print(x, y)
-                m.move(data)
+                print(handle_messages(msg=data))
 
         await async_sleep(0)
 
 
 async def send_websocket_messages():
   pass
+
+def handle_messages(msg: str)-> str:
+    try:
+        parsed = json.loads(msg)
+        message_type = parsed.get("type")
+        message_value = parsed.get("value")
+
+        if message_type == "move":
+            m.move(coors=message_value)
+        elif message_type == "click":
+            m.click(button=message_value)
+        else:
+            print("Unknown message type:", message_type)
+        
+        return message_value
+
+    except json.JSONDecodeError:
+        return "Failed to decode JSON"
+
 
 
 async def main():
