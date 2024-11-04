@@ -67,4 +67,9 @@
       prevPos.prevY = newY;
     }
   });
+  frame.addEventListener("touchend", ({ touches }) => {
+    // reset movement when touch ended
+    prevPos.prevX = undefined;
+    prevPos.prevY = undefined;
+  });
 </script>
