@@ -19,11 +19,11 @@ CIRCUITPY_WIFI_PASSWORD = "password"
 ```
 
 3. Upload the files in this repo to you Pico.
-4. Run `main.py` and find your device's ip running the server on port 5000.
+4. Run `main.py` and find your device's ip running the server on port 80.
 5. Now that you know the ip, you can connect to your target device. Go to the ip in your phone and control the devices's mouse.
 
-### Video demo
-
+## Mouse Demo
 
 https://github.com/user-attachments/assets/039b87b2-829e-45b4-b4d2-8d66424e16f5
 
+## TODO: add more keyboard functionalities

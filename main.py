@@ -44,8 +44,7 @@ def connect_client(request: Request):
     return websocket
 
 
-server.start(str(wifi.radio.ipv4_address))
-
+server.start(str(wifi.radio.ipv4_address), 80)
 
 async def handle_http_requests():
     while True:
@@ -58,7 +57,7 @@ async def handle_websocket_requests():
     while True:
         if websocket is not None:
             if (data := websocket.receive(fail_silently=True)) is not None:
-                print(device.handle_events(msg=data))
+                device.handle_events(msg=data)
 
         await async_sleep(0)
 
