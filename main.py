@@ -54,11 +54,21 @@ async def handle_http_requests():
 
 
 async def handle_websocket_requests():
+    global websocket
+
     while True:
         if websocket is not None:
-            if (data := websocket.receive(fail_silently=True)) is not None:
-                device.handle_events(msg=data)
-
+            try:
+                data = websocket.receive(fail_silently=True)
+                
+                if data is not None:
+                    device.handle_events(msg=data)
+                    
+            except (IndexError, OSError) as e:
+                print(f"WebSocket error: {e}")
+                websocket.close()  # Ensure the WebSocket is closed if an error occurs
+                websocket = None  # Reset the WebSocket variable to None
+                
         await async_sleep(0)
 
 
