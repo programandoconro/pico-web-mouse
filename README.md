@@ -22,4 +22,8 @@ CIRCUITPY_WIFI_PASSWORD = "password"
 4. Run `main.py` and find your device's ip running the server on port 5000.
 5. Now that you know the ip, you can connect to your target device. Go to the ip in your phone and control the devices's mouse.
 
-### TODO: add video demonstration
+### Video demo
+
+
+https://github.com/user-attachments/assets/039b87b2-829e-45b4-b4d2-8d66424e16f5
+
