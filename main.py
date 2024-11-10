@@ -11,7 +11,7 @@ import wifi
 from mouse import Mouse
 
 pool = socketpool.SocketPool(wifi.radio)
-server = Server(pool, debug=True)
+server = Server(pool)
 
 websocket: Websocket = None
 
