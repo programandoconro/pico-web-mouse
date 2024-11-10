@@ -1,8 +1,16 @@
 import usb_hid
 from adafruit_hid.mouse import Mouse as AdafruitMouse
+from adafruit_hid.keyboard import Keyboard
+from adafruit_hid.keyboard_layout_us import KeyboardLayoutUS
+from adafruit_hid.keycode import Keycode
+
 import json
 
+
 m = AdafruitMouse(usb_hid.devices)
+keyboard = Keyboard(usb_hid.devices)
+k = KeyboardLayoutUS(keyboard)
+
 class Mouse:
     def __init__(self):
         pass
@@ -27,6 +35,9 @@ class Mouse:
             m.click(AdafruitMouse.LEFT_BUTTON)
         elif button == "right":
             m.click(AdafruitMouse.RIGHT_BUTTON)
+
+    def write(self, text: str) -> None:
+        k.write(text)
     
     def handle_mouse_events(self, msg: str)-> str:
         try:
@@ -38,6 +49,8 @@ class Mouse:
                 self.move(coors=message_value)
             elif message_type == "click":
                 self.click(button=message_value)
+            elif message_type == "write":
+                self.write(text=message_value)
             else:
                 print("Unknown message type:", message_type)
             

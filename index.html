@@ -7,6 +7,10 @@
   </head>
   <body>
     <h1>Pico Web Mouse</h1>
+    <div class="keyboard-container">
+      <input id="keyboard" class="keyboard" />
+      <button id="write" type="button">Write</button>
+    </div>
     <div class="frame" id="frame"></div>
     <div class="buttons">
       <button id="left-button" type="button">Left click</button>
@@ -30,7 +34,7 @@
   }
   .frame {
     border: solid 1px whitesmoke;
-    height: 500px;
+    height: 400px;
     width: 95%;
     margin: 10px;
   }
@@ -41,13 +45,22 @@
     gap: 10px;
     padding: 10px;
     padding-top: 0px;
+  }
+  button {
+    height: 30px;
     background-color: black;
     color: whitesmoke;
-    border: whitesmoke 1px;
+    border: solid whitesmoke 1px;
     border-radius: 5px;
   }
-  .buttons button {
+  .keyboard-container {
+    display: flex;
+    justify-content: space-between;
+    width: 95%;
     height: 30px;
+  }
+  .keyboard-container .keyboard {
+    width: 70%;
   }
 </style>
 
@@ -111,5 +124,16 @@
 
   rightButton.addEventListener("click", () => {
     webSocket.send(JSON.stringify({ type: "click", value: "right" }));
+  });
+
+  const keyboard = document.getElementById("keyboard");
+
+  let inputValue = "";
+  keyboard.addEventListener("input", (e) => {
+    inputValue = e.target.value;
+  });
+  const write = document.getElementById("write");
+  write.addEventListener("click", () => {
+    webSocket.send(JSON.stringify({ type: "write", value: inputValue }));
   });
 </script>
