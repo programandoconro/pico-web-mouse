@@ -1,4 +1,5 @@
 # Creates a websocket server to virtually mouse control remotely
+# It also allows clicking, tapping and writing
 # Websocket based on adafruit websocket example https://docs.circuitpython.org/projects/httpserver/en/latest/examples.html#websockets
 
 from adafruit_httpserver import Server, Request, Response, Websocket, GET
@@ -8,14 +9,14 @@ import digitalio
 import board
 import wifi
 
-from mouse import Mouse
+from device import Device
 
 pool = socketpool.SocketPool(wifi.radio)
 server = Server(pool)
 
 websocket: Websocket = None
 
-m = Mouse()
+device = Device()
 
 led = digitalio.DigitalInOut(board.LED)
 led.direction = digitalio.Direction.OUTPUT
@@ -31,7 +32,7 @@ def client(request: Request):
         led.value = False
         return Response(request, "File not found", status=404)
 
-@server.route("/connect-websocket", GET)
+@server.route("/websocket", GET)
 def connect_client(request: Request):
     global websocket
 
@@ -57,7 +58,7 @@ async def handle_websocket_requests():
     while True:
         if websocket is not None:
             if (data := websocket.receive(fail_silently=True)) is not None:
-                print(m.handle_mouse_events(msg=data))
+                print(device.handle_events(msg=data))
 
         await async_sleep(0)
 

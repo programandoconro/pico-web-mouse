@@ -10,6 +10,7 @@
     <div class="keyboard-container">
       <input id="keyboard" class="keyboard" />
       <button id="write" type="button">Write</button>
+      <button id="enter" type="button">Enter</button>
     </div>
     <div class="frame" id="frame"></div>
     <div class="buttons">
@@ -67,7 +68,7 @@
 <script>
   console.log("Attempting to connect to server");
 
-  const url = `ws://${window.location.host}/connect-websocket`;
+  const url = `ws://${window.location.host}/websocket`;
   const webSocket = new WebSocket(url);
 
   webSocket.addEventListener("open", () => {
@@ -135,5 +136,10 @@
   const write = document.getElementById("write");
   write.addEventListener("click", () => {
     webSocket.send(JSON.stringify({ type: "write", value: inputValue }));
+  });
+
+  const enter = document.getElementById("enter");
+  enter.addEventListener("click", () => {
+    webSocket.send(JSON.stringify({ type: "enter", value: "Enter" }));
   });
 </script>

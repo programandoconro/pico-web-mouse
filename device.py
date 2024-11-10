@@ -1,17 +1,17 @@
+import json
+
 import usb_hid
-from adafruit_hid.mouse import Mouse as AdafruitMouse
+from adafruit_hid.mouse import Mouse
 from adafruit_hid.keyboard import Keyboard
 from adafruit_hid.keyboard_layout_us import KeyboardLayoutUS
 from adafruit_hid.keycode import Keycode
 
-import json
 
-
-m = AdafruitMouse(usb_hid.devices)
+mouse = Mouse(usb_hid.devices)
 keyboard = Keyboard(usb_hid.devices)
-k = KeyboardLayoutUS(keyboard)
+keyboard_layout_us = KeyboardLayoutUS(keyboard)
 
-class Mouse:
+class Device:
     def __init__(self):
         pass
 
@@ -28,33 +28,39 @@ class Mouse:
 
     def move(self, coors) -> None:
         (x, y) = self.parse_coors(coors)
-        m.move(x, y)
+        mouse.move(x, y)
 
     def click(self, button) -> None:
         if button == "left":
-            m.click(AdafruitMouse.LEFT_BUTTON)
+            mouse.click(Mouse.LEFT_BUTTON)
         elif button == "right":
-            m.click(AdafruitMouse.RIGHT_BUTTON)
+            mouse.click(Mouse.RIGHT_BUTTON)
 
     def write(self, text: str) -> None:
-        k.write(text)
+        keyboard_layout_us.write(text)
+
+    def hit_enter(self) -> None:
+        keyboard.press(Keycode.RETURN)
+        keyboard.release(Keycode.RETURN)
     
-    def handle_mouse_events(self, msg: str)-> str:
+    def handle_events(self, msg: str)-> str:
         try:
             parsed = json.loads(msg)
-            message_type = parsed.get("type")
-            message_value = parsed.get("value")
+            type = parsed.get("type")
+            value = parsed.get("value")
 
-            if message_type == "move":
-                self.move(coors=message_value)
-            elif message_type == "click":
-                self.click(button=message_value)
-            elif message_type == "write":
-                self.write(text=message_value)
+            if type == "move":
+                self.move(coors=value)
+            elif type == "click":
+                self.click(button=value)
+            elif type == "write":
+                self.write(text=value)
+            elif type == "enter":
+                self.hit_enter()
             else:
-                print("Unknown message type:", message_type)
+                print("Unknown message type:", type, value)
             
-            return message_value
+            return value
 
         except json.JSONDecodeError:
             return "Failed to decode JSON"
